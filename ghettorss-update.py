@@ -10,6 +10,9 @@ import httplib
 import sqlite3
 import sys
 import urlparse
+import urllib2
+
+
 
 FEEDS_FILE = "ghetto-feeds.txt"
 SQLITE_DATABASE = "ghettorss.sqlite3"
@@ -200,7 +203,6 @@ class ImgCssParser(HTMLParser.HTMLParser):
         page = ''.join(self.stack)
         return page
 
-
 # given a db cursor, feed ID, and RSS entry dictionary, download the page,
 # parse the HTML, download any supporting files, and store them all in
 # the database
@@ -213,7 +215,11 @@ def fetch_post(cursor, feed_id, entry):
         author = entry['author']
     else:
         author = "(unknown)"
-    link = entry['link']
+    starturl = entry['link'] #sometimes, this url redirects to another url    
+    headers = { 'User-Agent' : 'Mozilla/5.0' }
+    req = urllib2.Request(starturl, None, headers) 
+    res = urllib2.urlopen(req) 
+    link = res.geturl() #this url, in case, is the target of the "redirection"; at this url there is our post.
     date = entry['updated']
     # TODO: need to convert this data structure into a proper Unix timestamp
     timestamp = entry['updated_parsed']
@@ -316,4 +322,3 @@ for feed in feeds:
     if feed == "":
         continue
     process_feed(feed)
-
