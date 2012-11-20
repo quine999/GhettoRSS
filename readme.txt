@@ -49,6 +49,14 @@ number can be specified using -p or --port). Thus, point your web browser to:
 And start reading your RSS feeds.
 
 
+
+If ghettorss-update.py and ghettorss-server.py are, say, in /dir, run:
+cd /dir
+./ghettorss-update.py
+./ghettorss-server.py
+
+
+
 Author
 ======
 Mike Melanson (mike -at- multimedia.cx)
